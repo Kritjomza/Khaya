@@ -42,7 +42,7 @@ $subcategories_data = $pdo->query("SELECT id, category_id, name FROM waste_subca
       </div>
       <div>
         <label class="block mb-1 font-semibold">ประเภทย่อย</label>
-        <select name="subcategory_id" id="subcategorySelect" required disabled class="w-full border rounded p-3 focus:ring-2 focus:ring-green-400">
+        <select name="subcategory_id" id="subcategorySelect" required class="w-full border rounded p-3 focus:ring-2 focus:ring-green-400">
           <option value="">-- กรุณาเลือกประเภทหลักก่อน --</option>
         </select>
       </div>
@@ -164,6 +164,9 @@ function updateLatLng(lat, lng) {
   document.getElementById('longitude').value = lng;
   document.getElementById('location').value = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
 }
+
+subcategorySelect.disabled = false;
+
 </script>
 </body>
 </html>

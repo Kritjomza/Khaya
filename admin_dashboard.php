@@ -43,8 +43,8 @@ $initialData = getWasteSummary($pdo, 'daily');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แดชบอร์ดผู้ดูแล</title>
-  <script src="http://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
   <style>
     body {
       font-family: 'Prompt', sans-serif;
@@ -66,9 +66,11 @@ $initialData = getWasteSummary($pdo, 'daily');
         <h2 class="text-2xl sm:text-3xl font-bold text-green-800">แดชบอร์ด</h2>
         <div class="flex gap-2 items-center">
             <input type="date" id="start_date" class="border px-3 py-2 rounded-md shadow-sm focus:ring-green-500 focus:outline-none">
-            <span class="text-gray-500">ถึง</span>
-            <input type="date" id="end_date" class="border px-3 py-2 rounded-md shadow-sm focus:ring-green-500 focus:outline-none">
-            <button id="filterBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">กรอง</button>
+                <span class="text-gray-500">ถึง</span>
+                <input type="date" id="end_date" class="border px-3 py-2 rounded-md shadow-sm focus:ring-green-500 focus:outline-none">
+                <button id="filterBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">กรอง</button>
+            <button id="showAllBtn" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">แสดงทั้งหมด</button>
+
         </div>
     </div>
 
@@ -100,8 +102,16 @@ $initialData = getWasteSummary($pdo, 'daily');
 </div>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>AOS.init();</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    document.getElementById('showAllBtn').addEventListener('click', async () => {
+        const res = await fetch('get_waste_data.php');
+        const data = await res.json();
+        updateChart(data);
+    });
+
     let chart;
     const ctx = document.getElementById('wasteChart').getContext('2d');
 
@@ -169,8 +179,8 @@ $initialData = getWasteSummary($pdo, 'daily');
         const data = await res.json();
         updateChart(data);
     });
+
 </script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<script>AOS.init();</script>
+
 </body>
 </html>

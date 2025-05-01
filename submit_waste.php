@@ -1,44 +1,56 @@
 <?php
-require 'db.php';
 session_start();
+require_once "db.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_SESSION['user_id'];
+    $username = $_SESSION['username']; // ดึง username จาก session
+
+    $category_id = $_POST['category_id'];          // ✅ แก้ให้ตรง name
+    $subcategory_id = $_POST['subcategory_id'];    // ✅ แก้ให้ตรง name
+    $weight = $_POST['weight'];
+    $phone = $_POST['phone'];
+    $message = $_POST['message'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
+
+    // เตรียมชื่อไฟล์รูปภาพ
+    $created_at = date('Y-m-d_H-i-s');
+    $filename = $username . '_' . $created_at . '.png';
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['image']['tmp_name'];
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        $destination = $uploadDir . $filename;
+
+        if (!move_uploaded_file($tmpName, $destination)) {
+            die("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+        }
+    } else {
+        $filename = null;
+    }
+
+    $stmt = $pdo->prepare("
+        INSERT INTO waste_sales 
+        (user_id, category_id, subcategory_id, weight, phone, message, image, latitude, longitude) 
+        VALUES 
+        (:user_id, :category_id, :subcategory_id, :weight, :phone, :message, :image, :latitude, :longitude)
+    ");
+    $stmt->execute([
+        'user_id' => $user_id,
+        'category_id' => $category_id,
+        'subcategory_id' => $subcategory_id,
+        'weight' => $weight,
+        'phone' => $phone,
+        'message' => $message,
+        'image' => $filename,
+        'latitude' => $latitude,
+        'longitude' => $longitude
+    ]);
+
+    header("Location: profile.php");
     exit();
 }
-
-$user_id = $_SESSION['user_id'];
-$category_id = $_POST['category_id'];
-$subcategory_id = $_POST['subcategory_id'];
-$weight = $_POST['weight'];
-$phone = $_POST['phone'];
-$message = $_POST['message'];
-$latitude = $_POST['latitude'];
-$longitude = $_POST['longitude'];
-
-$imagePath = null;
-if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $imageName = 'img_' . uniqid() . '.' . $ext;
-    $imagePath = 'uploads/' . $imageName;
-    move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/uploads/' . $imageName);
-}
-
-$sql = "INSERT INTO waste_sales (user_id, category_id, subcategory_id, weight, phone, message, image, latitude, longitude)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    $user_id,
-    $category_id,
-    $subcategory_id,
-    $weight,
-    $phone,
-    $message,
-    $imagePath,
-    $latitude,
-    $longitude
-]);
-
-header('Location: history.php');
-exit();
-?>

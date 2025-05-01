@@ -1,5 +1,14 @@
 <?php
 //login
+session_set_cookie_params([
+  'lifetime' => 0,
+  'path' => '/',
+  'domain' => $_SERVER['HTTP_HOST'],
+  'secure' => false, // ใช้ true หากคุณใช้ HTTPS แล้ว
+  'httponly' => true,
+  'samesite' => 'Lax'
+]);
+session_start();
 require_once 'db.php';
 require_once 'navbar.php';
 
@@ -14,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
 
         header("Location: " . ($user['role'] === 'admin' ? 'admin_dashboard.php' : 'index.php'));

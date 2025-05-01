@@ -53,7 +53,7 @@ $wastes = $stmt->fetchAll();
 
 <div class="md:ml-64 p-4 sm:p-6  mx-auto mt-16 md:mt-0">
 
-    <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">🗂 จัดการข้อมูลขยะ</h2>
+    <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">จัดการข้อมูลขยะ</h2>
 
     <!-- Dropdown Filters -->
     <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -111,12 +111,13 @@ $wastes = $stmt->fetchAll();
                         <td class="p-3"><?= htmlspecialchars($waste['phone']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($waste['message']) ?></td>
                         <td class="p-3">
-                            <?php if ($waste['image']): ?>
-                                <img src="uploads/<?= $waste['image'] ?>" class="w-16 h-16 object-cover rounded border">
+                            <?php if (!empty($waste['image'])): ?>
+                                <img src="uploads/<?php echo htmlspecialchars($waste['image']); ?>" class="w-16 h-16 object-cover rounded-md" alt="waste image">
                             <?php else: ?>
                                 -
                             <?php endif; ?>
                         </td>
+
                         <td class="p-3">
                             <a href="https://www.google.com/maps?q=<?= $waste['latitude'] ?>,<?= $waste['longitude'] ?>"
                                target="_blank" class="text-blue-600 underline">แผนที่</a>
