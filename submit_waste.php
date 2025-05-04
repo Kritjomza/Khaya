@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
     $username = $_SESSION['username']; // ดึง username จาก session
 
-    $category_id = $_POST['category_id'];          // ✅ แก้ให้ตรง name
-    $subcategory_id = $_POST['subcategory_id'];    // ✅ แก้ให้ตรง name
+    $category_id = $_POST['category_id'];
+    $subcategory_id = $_POST['subcategory_id'];
     $weight = $_POST['weight'];
     $phone = $_POST['phone'];
     $message = $_POST['message'];
@@ -51,6 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'longitude' => $longitude
     ]);
 
-    header("Location: profile.php");
+    header("Location: history.php");
     exit();
 }
